@@ -3,11 +3,13 @@
 Após diversos testes feitos na unity e estudos em C#, decidi fazer este jogo da velha.
 
 
-## como usar
+## Como Usar
 
-o jogo inicia com o jogador X , você terá que definir primeiramente a linha, depois a coluna, fazendo assim sua jogada
+O Jogo utiliza uma matriz 4x4, mas usando apenas 3x3, para deixar mais organizado.
+Iniciando com o jogador X, ele escolhe inicialmente a Linha e após a Coluna
+caso, se o jogador completar uma linha ou diagonal completa ele ganha, mas seu adversario tentará atrapalhar e tambem ganhar.
 
-## o que falta
+## O Que Falta
 
 - configuração das regras
 
