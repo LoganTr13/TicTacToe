@@ -11,12 +11,4 @@ caso, se o jogador completar uma linha ou diagonal completa ele ganha, mas seu a
 
 ## O Que Falta
 
-- configuração das regras
-
-- melhorias
-
-- organização melhor 
-
-- Tratamento Melhor
-
 - I.A. (será a primeira vez q implementarei uma I.A.)
