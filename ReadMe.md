@@ -11,4 +11,6 @@ caso, se o jogador completar uma linha ou diagonal completa ele ganha, mas seu a
 
 ## O Que Falta
 
-- I.A. (será a primeira vez q implementarei uma I.A.)
+- Arrumar o sistema de Empate.
+- Arrumar um parte mais grafica do jogo.
+- I.A. (será a primeira vez q implementarei uma I.A.).
