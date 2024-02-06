@@ -1,128 +1,88 @@
 using System;
 using System.Threading;
 
-namespace TicTacToe
-{
-    class Program
-    {
-        static char[,] grid = new char[4,4];
-        static char playerAtual = 'X';
-        static int p = 0;
-
-        static void Main()
-        {            
-            grid[1,1] = '#'; grid[1,2] = '#'; grid[1,3] = '#';
-
-            grid[2,1] = '#'; grid[2,2] = '#'; grid[2,3] = '#';
-
-            grid[3,1] = '#'; grid[3,2] = '#'; grid[3,3] = '#';
-
-            Board();
-            gameLoop();            
-        }
-
-        static void gameLoop()
-        {
-            
-            int Ln, Col;
-            while (true)
-            {
-                //Tratamento de Caracter//
-                Console.WriteLine("Vez Do " + playerAtual);
-                Console.Write("Escreva a linha, entre 1 a 3: ");
-                string Linha = Console.ReadLine();
-                Ln = Convert.ToInt16(Linha[0]) - 48;
+namespace TicTacToe {
+    class Program {
+        static char[,] grid = new char[3,3];
+        static char currentPlayer = 'X';
+        static bool winState = false;
+        static bool tieState = false;
+        static string currentPlayerColor;
+        static int Main() {
+            ClearGrid();
+            Console.Clear();
+            while(!winState && !tieState) {
+                currentPlayerColor = ((currentPlayer == 'X') ? "\u001b[1;31m" : "\u001b[1;36m") +currentPlayer+"\u001b[0m";
+                int Ln, Col;
+                // get line
+                PrintGrid();
+                Console.WriteLine($"Time of: {currentPlayerColor}");
+                Console.Write("L  Write Line, 1-3: ");
+                string choiceLine = Console.ReadLine();
+                Ln = Convert.ToInt16(choiceLine[0]-1) - 48;
                 Console.Clear();
-                Board();
-                Console.WriteLine("Vez Do " + playerAtual);
-                Console.Write("Escreva a Coluna, entre 1 a 3: ");
-                string Coluna = Console.ReadLine();
-                Col = Convert.ToInt16(Coluna[0]) - 48;
-                //Fim Do Tratamento//
+                // get colum
+                PrintGrid();
+                Console.WriteLine($"time of: {currentPlayerColor}");
+                Console.Write($"L{Ln+1} Write Colum, 1-3: ");
+                string choiceColum = Console.ReadLine();
+                Col = Convert.ToInt16(choiceColum[0]-1) - 48;
+                Console.Clear();
 
-                if(grid[Ln,Col] == '#')
-                {
-                    grid[Ln,Col] = playerAtual;
-                    rules();
-                    if(playerAtual == 'X')  {playerAtual = 'O';}
-                    else  {playerAtual = 'X';}
-                }else{
+                if(grid[Ln,Col] == '*') {
+                    grid[Ln,Col] = currentPlayer;
+                    winState = CheckWinner();
+                    if(!winState) currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                    else break;
+                } else {
                     Console.Clear();
-                    Console.WriteLine("A área escolhida ja esta ocupada, tente novamente...");
-                    Thread.Sleep(3000);
+                    Console.WriteLine("\n  It's not your local, try again. (enter to continue)");
+                    Console.ReadLine();
+                    Console.Clear();
                 }
+            }
+            if(!tieState) {
                 Console.Clear();
-                Board();
+                PrintGrid();
+                Console.WriteLine($"\nCongratulations! player {currentPlayerColor} has win! (enter to exit)");
+                Console.ReadLine();
+                return 0;
+            }
+            Console.Clear();
+            PrintGrid();
+            Console.WriteLine($"\nThe game have tied. (enter to exit)");
+            Console.ReadLine();
+            return 0;
+        }
+        static void PrintGrid() {
+            Console.Write("\n\n    1 2 3\n");
+            for(int i=0;i<3;i++) {
+                Console.Write($"  {i+1} ");
+                for(int j=0;j<3;j++) {
+                    string colorMake = ((grid[i,j] == 'X') ? "\u001b[1;31m" : (grid[i,j] == 'O') ? "\u001b[1;36m" : "\u001b[37m");
+                    Console.Write($"{colorMake}{grid[i,j]}\u001b[0m ");
+                }
+                Console.WriteLine();
+            }
+            Console.Write("\n");
+        }
+        static void ClearGrid() {
+            for(int i=0;i<9;i++) {
+                grid[i/3,i%3] = '*';
             }
         }
-        static void Board()
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("    " + grid[1,1] + " | " + grid[1,2] + " | " + grid[1,3]);
-            Console.WriteLine("    ---------");
-            Console.WriteLine("    " + grid[2,1] + " | " + grid[2,2] + " | " + grid[2,3]);
-            Console.WriteLine("    ---------");
-            Console.WriteLine("    " + grid[3,1] + " | " + grid[3,2] + " | " + grid[3,3]);
-            Console.WriteLine();
-        }
-        static void rules()
-        {
-            
-            if(grid[1,3] == grid[2,2] && grid[2,2] == grid[3,1] && grid[2,2] != '#')
-            {
-                Console.Clear();
-                Console.WriteLine(playerAtual + " venceu!");
-                Console.ReadLine();
+        static bool CheckWinner() {
+            int tieCount = 0;
+            for(int i=0;i<9;i++) {
+                tieCount = (grid[i/3,i%3] != '*') ? tieCount+1 : tieCount;
             }
-            if(grid[1,1] == grid[2,2] && grid[2,2] == grid[3,3] && grid[2,2] != '#')
-            {
-                Console.Clear();
-                Console.WriteLine(playerAtual + " venceu!");
-                Console.ReadLine();
+            tieState = (tieCount==9);
+            for(int i = 0; i < 3; i++) {
+                if (grid[i, 0] != '*' && grid[i, 0] == grid[i, 1] && grid[i, 1] == grid[i, 2]||
+                    grid[0, i] != '*' && grid[0, i] == grid[1, i] && grid[1, i] == grid[2, i]) return true;
             }
-            for (int l = 1; l < 4; l++)
-            {
-                for (int c = 1; c < 4; c++)
-                {
-                    if(grid[l,c] == playerAtual)
-                    {
-                        p++;
-                        if(p == 3)
-                        {
-                            Console.Clear();
-                            Console.WriteLine(playerAtual + " venceu!"); 
-                            Console.ReadLine();
-                        }
-                    }
-                    else
-                    {
-                        p = 0;
-                        break;                  
-                    }
-                }
-            }
-            for (int c = 1; c < 4; c++)
-            {
-                for (int l = 1; l < 4; l++)
-                {
-                    if(grid[l,c] == playerAtual)
-                    {
-                        p++;
-                        if(p == 3)
-                        {
-                            Console.Clear();
-                            Console.WriteLine(playerAtual + " venceu!");
-                            Console.ReadLine();
-                        }
-                    }
-                    else
-                    {
-                        p = 0;
-                        break;                        
-                    }
-                }
-            }
+            return (grid[0, 0] != '*' && grid[0, 0] == grid[1, 1] && grid[1, 1] == grid[2, 2]) ||
+                (grid[0, 2] != '*' && grid[0, 2] == grid[1, 1] && grid[1, 1] == grid[2, 0]);
         }
     }
 }
